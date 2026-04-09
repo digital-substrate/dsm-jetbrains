@@ -1,0 +1,323 @@
+<idea-plugin>
+    <id>com.digitalsubstrate.dsm</id>
+    <name>DSM Language Support</name>
+    <vendor email="support@digitalsubstrate.io" url="https://digitalsubstrate.io">Digital Substrate</vendor>
+
+
+    <description><![CDATA[
+    <h2>Official IntelliJ IDEA extension for the Digital Substrate Model (DSM) language</h2>
+
+    <p>The DSM extension provides comprehensive language support for <code>.dsm</code> files, including syntax highlighting, code formatting, intelligent code completion, advanced navigation, and validation via <code>dsm_util.py</code>.</p>
+
+    <h3>Features</h3>
+
+    <h4>Syntax Highlighting</h4>
+    <ul>
+        <li><b>Keywords:</b> namespace, concept, club, membership, enum, struct, attachment, function_pool, attachment_function_pool</li>
+        <li><b>Types:</b> All primitive types (bool, int8-64, uint8-64, float, double, string, uuid, blob_id, commit_id)</li>
+        <li><b>Collections:</b> vec, mat, tuple, optional, vector, set, map, xarray, variant, key</li>
+        <li><b>UUIDs:</b> Automatic recognition and highlighting of UUID patterns</li>
+        <li><b>Comments:</b> Line comments (//) and docstrings ("""...""")</li>
+        <li><b>Enumerations:</b> Enum value syntax (.EnumValue)</li>
+        <li><b>Semantic Coloring:</b> Concepts, structs, enums, and function pools each have distinct colors</li>
+    </ul>
+
+    <h4>Code Formatting</h4>
+    <ul>
+        <li><b>Automatic Formatting:</b> Reformat code with Cmd+Alt+L (macOS) / Ctrl+Alt+L (Windows/Linux)</li>
+        <li><b>Smart Indentation:</b> Proper indentation for struct and enum fields (4 spaces default)</li>
+        <li><b>Consistent Spacing:</b> Automatic spacing around operators, commas, and type parameters</li>
+        <li><b>List Literals:</b> Keeps list initializers on a single line (e.g., {0.0, 0.0, 0.0})</li>
+        <li><b>Configurable:</b> Customize indent size, tab size, and spacing in Code Style settings</li>
+    </ul>
+
+    <h4>Brace Matching</h4>
+    <ul>
+        <li><b>Highlight Matching Braces:</b> Automatically highlights corresponding { }, [ ], ( ), and &lt; &gt; pairs</li>
+        <li><b>Quick Navigation:</b> Jump between matching braces with Cmd+Shift+M (macOS) / Ctrl+Shift+M (Windows/Linux)</li>
+        <li><b>Block Selection:</b> Expand selection to enclosing blocks with Cmd+W / Ctrl+W</li>
+    </ul>
+
+    <h4>Smart Snippets</h4>
+    <p>Type prefixes and press Tab to insert common DSM constructs:</p>
+
+    <p><b>Primitive Types:</b></p>
+    <ul>
+        <li>bool, string, uuid, blob_id</li>
+        <li>int8, int16, int32, int64</li>
+        <li>uint8, uint16, uint32, uint64</li>
+        <li>float, double</li>
+    </ul>
+
+    <p><b>Collections:</b></p>
+    <ul>
+        <li>vec → vec&lt;T, size&gt; (numeric vectors)</li>
+        <li>mat → mat&lt;T, cols, rows&gt; (matrices)</li>
+        <li>optional → optional&lt;T&gt; (nullable values)</li>
+        <li>vector → vector&lt;T&gt; (dynamic arrays)</li>
+        <li>set → set&lt;T&gt; (unique collections)</li>
+        <li>map → map&lt;K, V&gt; (key-value pairs)</li>
+        <li>tuple → tuple&lt;T0, T1&gt; (fixed tuples)</li>
+        <li>variant → variant&lt;T0, T1&gt; (union types)</li>
+        <li>xarray → xarray&lt;T&gt; (multi-dimensional arrays)</li>
+        <li>key → key&lt;T&gt; (entity references)</li>
+    </ul>
+
+    <p><b>Structures:</b></p>
+    <ul>
+        <li>namespace → Full namespace template with UUID placeholder</li>
+        <li>concept → Concept declaration</li>
+        <li>club → Club declaration</li>
+        <li>membership → Membership declaration</li>
+        <li>enum → Enumeration template</li>
+        <li>struct → Structure template</li>
+        <li>attachment → Attachment declaration</li>
+        <li>function_pool → Function pool template with UUID</li>
+        <li>attachment_function_pool → Attachment function pool template</li>
+        <li>docstr → Documentation string ("""...""")</li>
+    </ul>
+
+    <p><b>Advanced Patterns:</b></p>
+    <ul>
+        <li>isa → Concept inheritance (concept Derived is a Base;)</li>
+        <li>struct-defaults → Structure with default field values</li>
+        <li>enum-field → Enum field with default value (.enumValue)</li>
+        <li>keyfield → Key field with naming convention (key&lt;Concept&gt; fieldKey;)</li>
+        <li>opt-key → Optional key field (optional&lt;key&lt;Concept&gt;&gt; fieldKey;)</li>
+        <li>mutable → Mutable function in attachment function pool (state-modifying)</li>
+        <li>query → Query function in attachment function pool (read-only)</li>
+    </ul>
+
+    <h4>Symbol Search</h4>
+    <p>Quick navigation to DSM types by name with <b>Alt+Cmd+O</b> (macOS) / <b>Ctrl+Alt+N</b> (Windows/Linux)</p>
+    <ul>
+        <li><b>Global Search:</b> Find concepts, structs, enums, clubs, and function pools across all project files</li>
+        <li><b>Type-Specific Icons:</b> Differentiated icons for each element type</li>
+        <li>Concepts: class icon (blue C)</li>
+        <li>Structs: static icon (orange S)</li>
+        <li>Enums: enum icon (purple E)</li>
+        <li>Clubs: interface icon</li>
+        <li>Function pools: function icon</li>
+        <li><b>File Location:</b> Shows the containing file for each result</li>
+        <li><b>Direct Navigation:</b> Jump to definition by selecting any search result</li>
+    </ul>
+
+    <h4>Documentation on Hover</h4>
+    <p>View quick documentation for DSM elements with <b>F1</b> (macOS) / <b>Ctrl+Q</b> (Windows/Linux)</p>
+    <ul>
+        <li><b>Docstring Display:</b> Shows triple-quoted documentation strings ("""...""") in formatted popup</li>
+        <li><b>Element Support:</b> Concepts, structs, enums, clubs, attachments, function pools, fields, functions, enum values</li>
+        <li><b>Type Information:</b> Displays type signatures and inheritance relationships</li>
+        <li><b>File Location:</b> Shows containing file for each element</li>
+        <li><b>Rich Formatting:</b> Definition headers, content sections, and metadata sections</li>
+    </ul>
+
+    <h4>Code Completion</h4>
+    <ul>
+        <li><b>Context-Aware for key&lt;T&gt;:</b> Inside <code>key&lt;&gt;</code>, suggests only concepts and clubs (not primitives or structs)</li>
+        <li><b>Context-Aware for attachment&lt;T, D&gt;:</b> First parameter suggests concepts/clubs, second parameter accepts any type</li>
+        <li><b>Keywords:</b> <code>is a</code>, <code>true</code>, <code>false</code></li>
+        <li><b>Primitive Types:</b> bool, int8-64, uint8-64, float, double, string, uuid, blob_id, commit_id</li>
+        <li><b>Special Types:</b> any, any_concept</li>
+    </ul>
+
+    <h4>Navigation & Structure</h4>
+    <ul>
+        <li>Find usages and references</li>
+        <li>Structure view for namespaces, concepts, structs, enums</li>
+        <li>Go to definition for user-defined types</li>
+    </ul>
+
+    <h4>DSM Validation</h4>
+    <p>Manual validation with <code>dsm_util.py</code> triggered via <b>Ctrl+Alt+V</b> keyboard shortcut.</p>
+    <ul>
+        <li>Dedicated <b>DSM Validation</b> tool window with sortable error table</li>
+        <li>Red wavy underlines on errors in editor with hover tooltips</li>
+        <li>Double-click errors to jump to location</li>
+        <li>Toolbar with "Validate", "Previous Error" (<b>Alt+Shift+F2</b>), and "Next Error" (<b>Alt+F2</b>) buttons</li>
+        <li>Error navigation cycles through all errors across all files</li>
+        <li>Configurable timeout for validation execution</li>
+    </ul>
+
+    <h3>Key DSM Concepts</h3>
+
+    <p><b>Concepts:</b> Hierarchical types with single inheritance using <code>is a</code> keyword</p>
+    <p><b>Attachments:</b> Associate data structures with concepts for domain modeling</p>
+    <p><b>Attachment Function Pools:</b> Define mutable operations for collaborative editing with undo/redo support</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+    <h3>1.2.3</h3>
+    <ul>
+        <li><b>Context-Aware Code Completion:</b> Smart completion for type parameters - inside <code>key&lt;T&gt;</code> suggests only concepts and clubs; inside <code>attachment&lt;T, D&gt;</code> first parameter suggests concepts/clubs</li>
+        <li><b>Documentation Provider:</b> Refactored to use PSI-based extraction following IntelliJ Platform best practices</li>
+        <li><b>File Template:</b> Create new DSM files via New → DSM File with auto-generated namespace and UUID</li>
+    </ul>
+
+    <h3>1.2.2</h3>
+    <ul>
+        <li>Added Symbol Search (Alt+Cmd+O / Ctrl+Alt+N) for quick navigation to DSM types</li>
+        <li>Added Documentation on Hover (F1 / Ctrl+Q) for docstrings</li>
+        <li>Added Live Templates for rapid DSM development</li>
+        <li>Added Rename Refactoring with cross-file support</li>
+    </ul>
+
+    <h3>1.2.0</h3>
+    <ul>
+        <li>Code Formatting with smart indentation (Cmd+Alt+L / Ctrl+Alt+L)</li>
+        <li>Brace Matching for all delimiter types</li>
+        <li>Code Folding for namespaces, structs, enums, function pools</li>
+    </ul>
+
+    <h3>1.0.0</h3>
+    <ul>
+        <li>Initial release with full DSM language support</li>
+        <li>Syntax and semantic highlighting</li>
+        <li>Code completion, navigation, and structure view</li>
+        <li>DSM validation via dsm_util.py integration</li>
+    </ul>
+    ]]></change-notes>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+            name="DSM File"
+            implementationClass="com.digitalsubstrate.dsm.core.DSMFileType"
+            fieldName="INSTANCE"
+            language="DSM"
+            extensions="dsm"/>
+
+        <lang.parserDefinition
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.parser.DSMParserDefinition"/>
+
+        <lang.syntaxHighlighterFactory
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.highlight.DSMSyntaxHighlighterFactory"/>
+
+        <colorSettingsPage
+            implementation="com.digitalsubstrate.dsm.highlight.DSMColorSettingsPage"/>
+
+        <completion.contributor
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.completion.DSMCompletionContributor"/>
+
+        <lang.findUsagesProvider
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.navigation.DSMFindUsagesProvider"/>
+
+        <lang.psiStructureViewFactory
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.structure.DSMPsiStructureViewFactory"/>
+
+        <lang.formatter
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.formatter.DSMFormattingModelBuilder"/>
+
+        <langCodeStyleSettingsProvider
+            implementation="com.digitalsubstrate.dsm.formatter.DSMLanguageCodeStyleSettingsProvider"/>
+
+        <lang.braceMatcher
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.editor.DSMBraceMatcher"/>
+
+        <lang.commenter
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.editor.DSMCommenter"/>
+
+        <lang.foldingBuilder
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.editor.DSMFoldingBuilder"/>
+
+        <annotator
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.highlight.DSMSemanticHighlightingAnnotator"/>
+
+        <lang.elementManipulator
+            forClass="com.digitalsubstrate.dsm.psi.DSMUserTypeReference"
+            implementationClass="com.digitalsubstrate.dsm.psi.DSMUserTypeReferenceManipulator"/>
+
+        <!-- Settings Page -->
+        <applicationConfigurable
+            parentId="language"
+            id="com.digitalsubstrate.dsm.settings.DSMSettingsConfigurable"
+            displayName="DSM Language"
+            instance="com.digitalsubstrate.dsm.settings.DSMSettingsConfigurable"/>
+
+        <applicationService
+            serviceImplementation="com.digitalsubstrate.dsm.settings.DSMSettingsState"/>
+
+        <projectService
+            serviceImplementation="com.digitalsubstrate.dsm.services.DSMValidationHighlighterService"/>
+
+        <projectService
+            serviceImplementation="com.digitalsubstrate.dsm.services.DSMValidationService"/>
+
+        <!-- Tool Window for Validation Results -->
+        <toolWindow
+            id="DSM Validation"
+            anchor="bottom"
+            factoryClass="com.digitalsubstrate.dsm.toolwindow.DSMValidationToolWindowFactory"
+            icon="AllIcons.General.InspectionsOK"/>
+
+        <!-- Live Templates -->
+        <defaultLiveTemplates file="/liveTemplates/DSM.xml"/>
+        <liveTemplateContext contextId="DSM" implementation="com.digitalsubstrate.dsm.liveTemplates.DSMTemplateContextType"/>
+
+        <!-- Symbol Search (Navigate | Symbol - Cmd+O / Ctrl+N) -->
+        <gotoSymbolContributor implementation="com.digitalsubstrate.dsm.navigation.DSMChooseByNameContributor"/>
+
+        <!-- Documentation Provider (Quick Documentation - F1 / Ctrl+Q) -->
+        <lang.documentationProvider
+            language="DSM"
+            implementationClass="com.digitalsubstrate.dsm.documentation.DSMDocumentationProvider"/>
+
+        <!-- Stub Index for fast cross-file reference resolution -->
+        <stubIndex implementation="com.digitalsubstrate.dsm.index.DSMNamedElementIndex"/>
+
+        <!-- File Templates -->
+        <internalFileTemplate name="DSM File"/>
+    </extensions>
+
+    <actions>
+        <!-- Validate DSM Files Action -->
+        <action
+            id="DSM.ValidateFiles"
+            class="com.digitalsubstrate.dsm.actions.DSMValidateAction"
+            text="Validate DSM Files"
+            description="Run dsm_util.py validation on DSM files"
+            icon="AllIcons.Actions.Execute">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt V"/>
+        </action>
+
+        <!-- Navigate to Next DSM Error -->
+        <action
+            id="DSM.NextError"
+            class="com.digitalsubstrate.dsm.actions.DSMNextErrorAction"
+            text="Next DSM Validation Error"
+            description="Navigate to next DSM validation error">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt F2"/>
+        </action>
+
+        <!-- Navigate to Previous DSM Error -->
+        <action
+            id="DSM.PreviousError"
+            class="com.digitalsubstrate.dsm.actions.DSMPreviousErrorAction"
+            text="Previous DSM Validation Error"
+            description="Navigate to previous DSM validation error">
+            <keyboard-shortcut keymap="$default" first-keystroke="alt shift F2"/>
+        </action>
+
+        <!-- Create New DSM File -->
+        <action
+            id="DSM.NewFile"
+            class="com.digitalsubstrate.dsm.actions.DSMCreateFileAction"
+            text="DSM File"
+            description="Create a new DSM file">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>

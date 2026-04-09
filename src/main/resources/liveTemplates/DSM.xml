@@ -1,0 +1,157 @@
+<templateSet group="DSM">
+  <!-- Structure Templates -->
+  <template name="struct" value="struct $NAME$ {&#10;    $END$&#10;};" description="A structure declaration" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="concept" value="concept $NAME$;$END$" description="A concept declaration" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="isa" value="concept $DERIVED$ is a $BASE$;$END$" description="A concept with single inheritance (is a)" toReformat="true" toShortenFQNames="true">
+    <variable name="DERIVED" expression="" defaultValue="&quot;DerivedConcept&quot;" alwaysStopAt="true" />
+    <variable name="BASE" expression="" defaultValue="&quot;BaseConcept&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="club" value="club $NAME$;$END$" description="A club" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="membership" value="membership $CLUB$ $CONCEPT$;$END$" description="A membership" toReformat="true" toShortenFQNames="true">
+    <variable name="CLUB" expression="" defaultValue="&quot;Club&quot;" alwaysStopAt="true" />
+    <variable name="CONCEPT" expression="" defaultValue="&quot;Concept&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="enum" value="enum $NAME$ {&#10;    $VALUE1$,&#10;    $VALUE2$&#10;    $END$&#10;};" description="An enumeration declaration" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true" />
+    <variable name="VALUE1" expression="" defaultValue="&quot;value1&quot;" alwaysStopAt="true" />
+    <variable name="VALUE2" expression="" defaultValue="&quot;value2&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="namespace" value="namespace $NAME$ {$UUID$} {&#10;    $END$&#10;};" description="A namespace with UUID (replace x's with actual UUID)" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true" />
+    <variable name="UUID" expression="" defaultValue="&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="attachment" value="attachment&lt;$CONCEPT$, $STRUCT$&gt; $NAME$;$END$" description="An attachment linking a concept to a data structure" toReformat="true" toShortenFQNames="true">
+    <variable name="CONCEPT" expression="" defaultValue="&quot;ConceptName&quot;" alwaysStopAt="true" />
+    <variable name="STRUCT" expression="" defaultValue="&quot;StructName&quot;" alwaysStopAt="true" />
+    <variable name="NAME" expression="" defaultValue="&quot;attachmentName&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="function_pool" value="function_pool $NAME$ {$UUID$} {&#10;    $END$&#10;};" description="A function pool with UUID (replace x's with actual UUID)" toReformat="true" toShortenFQNames="true">
+    <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true" />
+    <variable name="UUID" expression="" defaultValue="&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="docstr" value="&quot;&quot;&quot;$END$&quot;&quot;&quot;" description="The documentation string" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <!-- Type Templates -->
+  <template name="vec" value="vec&lt;$TYPE$, $SIZE$&gt;$END$" description="A vec&lt;T, size&gt; where T is numeric" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="enum(&quot;float&quot;,&quot;double&quot;,&quot;int8&quot;,&quot;int16&quot;,&quot;int32&quot;,&quot;int64&quot;,&quot;uint8&quot;,&quot;uint16&quot;,&quot;uint32&quot;,&quot;uint64&quot;)" defaultValue="&quot;float&quot;" alwaysStopAt="true" />
+    <variable name="SIZE" expression="" defaultValue="&quot;size&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="mat" value="mat&lt;$TYPE$, $COLS$, $ROWS$&gt;$END$" description="A mat&lt;T, cols, rows&gt; where T is numeric" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="enum(&quot;float&quot;,&quot;double&quot;,&quot;int8&quot;,&quot;int16&quot;,&quot;int32&quot;,&quot;int64&quot;,&quot;uint8&quot;,&quot;uint16&quot;,&quot;uint32&quot;,&quot;uint64&quot;)" defaultValue="&quot;float&quot;" alwaysStopAt="true" />
+    <variable name="COLS" expression="" defaultValue="&quot;cols&quot;" alwaysStopAt="true" />
+    <variable name="ROWS" expression="" defaultValue="&quot;rows&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="optional" value="optional&lt;$TYPE$&gt;$END$" description="An optional&lt;T&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="" defaultValue="&quot;T&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="vector" value="vector&lt;$TYPE$&gt;$END$" description="A vector&lt;T&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="" defaultValue="&quot;T&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="set" value="set&lt;$TYPE$&gt;$END$" description="A set&lt;T&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="" defaultValue="&quot;T&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="map" value="map&lt;$KEY$, $VALUE$&gt;$END$" description="A map&lt;K, V&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="KEY" expression="" defaultValue="&quot;K&quot;" alwaysStopAt="true" />
+    <variable name="VALUE" expression="" defaultValue="&quot;V&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="tuple" value="tuple&lt;$T0$, $T1$&gt;$END$" description="A tuple&lt;T0, T1&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="T0" expression="" defaultValue="&quot;T0&quot;" alwaysStopAt="true" />
+    <variable name="T1" expression="" defaultValue="&quot;T1&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="variant" value="variant&lt;$T0$, $T1$&gt;$END$" description="A variant&lt;T0, T1&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="T0" expression="" defaultValue="&quot;T0&quot;" alwaysStopAt="true" />
+    <variable name="T1" expression="" defaultValue="&quot;T1&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="xarray" value="xarray&lt;$TYPE$&gt;$END$" description="A xarray&lt;T&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="" defaultValue="&quot;T&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+  <template name="key" value="key&lt;$TYPE$&gt;$END$" description="A key&lt;T&gt; where T is a concept, a club or any_concept" toReformat="false" toShortenFQNames="true">
+    <variable name="TYPE" expression="" defaultValue="&quot;T&quot;" alwaysStopAt="true" />
+    <context>
+      <option name="DSM" value="true" />
+    </context>
+  </template>
+
+</templateSet>

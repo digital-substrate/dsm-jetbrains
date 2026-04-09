@@ -1,0 +1,21 @@
+// File that uses types from types.dsm
+namespace Drawing {550e8400-e29b-41d4-a716-446655440000} {
+
+// These references should navigate to types.dsm when Cmd+Click
+struct Canvas {
+    Color backgroundColor;
+    vector<key<Shape>> shapes;
+};
+
+struct Layer {
+    Point origin;
+    Rectangle bounds;
+    vector<key<Entity>> entities;
+};
+
+};
+
+function_pool Renderer {770e9600-f49c-52f5-c837-668877662222} {
+void drawShape(key<Shape> s);
+void drawAtPoint(Point p);
+};

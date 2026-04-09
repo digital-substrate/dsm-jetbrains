@@ -1,0 +1,309 @@
+{
+  parserClass="com.digitalsubstrate.dsm.parser.DSMParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="DSM"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.digitalsubstrate.dsm.psi"
+  psiImplPackage="com.digitalsubstrate.dsm.psi.impl"
+
+  elementTypeHolderClass="com.digitalsubstrate.dsm.psi.DSMTypes"
+  elementTypeClass="com.digitalsubstrate.dsm.psi.DSMElementType"
+  tokenTypeClass="com.digitalsubstrate.dsm.psi.DSMTokenType"
+
+  tokens=[
+    // Keywords
+    NAMESPACE='namespace'
+    CONCEPT='concept'
+    STRUCT='struct'
+    ENUM='enum'
+    ATTACHMENT='attachment'
+    CLUB='club'
+    MEMBERSHIP='membership'
+    FUNCTION_POOL='function_pool'
+    ATTACHMENT_FUNCTION_POOL='attachment_function_pool'
+    MUTABLE='mutable'
+    IS_A='is a'
+
+    // Primitive types
+    VOID='void'
+    BOOL='bool'
+    INT8='int8'
+    INT16='int16'
+    INT32='int32'
+    INT64='int64'
+    UINT8='uint8'
+    UINT16='uint16'
+    UINT32='uint32'
+    UINT64='uint64'
+    FLOAT='float'
+    DOUBLE='double'
+    STRING='string'
+    UUID_TYPE='uuid'
+    BLOB_ID='blob_id'
+    COMMIT_ID='commit_id'
+    ANY='any'
+    ANY_CONCEPT='any_concept'
+
+    // Generic/container types
+    KEY='key'
+    OPTIONAL='optional'
+    VECTOR='vector'
+    SET='set'
+    MAP='map'
+    TUPLE='tuple'
+    VARIANT='variant'
+    XARRAY='xarray'
+    VEC='vec'
+    MAT='mat'
+
+    // Symbols
+    LBRACE='{'
+    RBRACE='}'
+    LPAREN='('
+    RPAREN=')'
+    LANGLE='<'
+    RANGLE='>'
+    LBRACKET='['
+    RBRACKET=']'
+    SEMICOLON=';'
+    COMMA=','
+    DOT='.'
+    COLON=':'
+    EQ='='
+
+    // Literals
+    TRUE='true'
+    FALSE='false'
+    NUMBER='regexp:-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?'
+    STRING_LITERAL='regexp:"([^"\\]|\\.)*"'
+    UUID='regexp:\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\}'
+    ENUM_VALUE='regexp:\.[a-zA-Z_][a-zA-Z0-9_]*'
+    IDENTIFIER='regexp:[a-zA-Z_][a-zA-Z0-9_]*(::[a-zA-Z_][a-zA-Z0-9_]*)?'
+
+    // Comments
+    LINE_COMMENT='regexp://[^\r\n]*'
+    DOC_STRING='regexp:"""([^"\\]|\\.)*"""'
+  ]
+}
+
+// Root rule
+dsmFile ::= topLevelDeclaration*
+
+private topLevelDeclaration ::=
+    namespaceDeclaration
+    | functionPoolDeclaration
+    | attachmentFunctionPoolDeclaration
+
+// Namespace
+namespaceDeclaration ::=
+    NAMESPACE IDENTIFIER UUID LBRACE namespaceBody RBRACE SEMICOLON
+    {pin=1 recoverWhile=namespaceRecover}
+
+private namespaceRecover ::= !(NAMESPACE | FUNCTION_POOL | ATTACHMENT_FUNCTION_POOL | <<eof>>)
+
+namespaceBody ::= namespaceElement*
+
+private namespaceElement ::=
+    conceptDeclaration
+    | structDeclaration
+    | enumDeclaration
+    | clubDeclaration
+    | membershipDeclaration
+    | attachmentDeclaration
+
+// Concept
+conceptDeclaration ::=
+    CONCEPT IDENTIFIER conceptInheritance? SEMICOLON
+    {
+        pin=1
+        recoverWhile=conceptRecover
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMNamedElementImpl"
+        implements="com.digitalsubstrate.dsm.psi.DSMNamedElement"
+        methods=[getName setName getNameIdentifier getTextOffset]
+        stubClass="com.digitalsubstrate.dsm.stub.DSMNamedElementStub"
+        elementTypeFactory="com.digitalsubstrate.dsm.stub.DSMStubElementTypesKt.factory"
+    }
+
+private conceptRecover ::= !(CONCEPT | STRUCT | ENUM | CLUB | MEMBERSHIP | ATTACHMENT | RBRACE)
+
+conceptInheritance ::= IS_A IDENTIFIER
+
+// Struct
+structDeclaration ::=
+    STRUCT IDENTIFIER LBRACE fieldDeclaration* RBRACE SEMICOLON
+    {
+        pin=1
+        recoverWhile=structRecover
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMNamedElementImpl"
+        implements="com.digitalsubstrate.dsm.psi.DSMNamedElement"
+        methods=[getName setName getNameIdentifier getTextOffset]
+        stubClass="com.digitalsubstrate.dsm.stub.DSMNamedElementStub"
+        elementTypeFactory="com.digitalsubstrate.dsm.stub.DSMStubElementTypesKt.factory"
+    }
+
+private structRecover ::= !(STRUCT | CONCEPT | ENUM | CLUB | MEMBERSHIP | ATTACHMENT | RBRACE)
+
+fieldDeclaration ::=
+    typeReference identifierOrKeyword defaultValue? SEMICOLON
+    {recoverWhile=fieldRecover}
+
+private fieldRecover ::= !(VOID | BOOL | INT8 | INT16 | INT32 | INT64 | UINT8 | UINT16 | UINT32 | UINT64 | FLOAT | DOUBLE | STRING | UUID_TYPE | BLOB_ID | COMMIT_ID | ANY | ANY_CONCEPT | KEY | OPTIONAL | VECTOR | SET | MAP | TUPLE | VARIANT | XARRAY | VEC | MAT | IDENTIFIER | RBRACE)
+
+defaultValue ::= EQ literalValue
+
+// Enum
+enumDeclaration ::=
+    ENUM IDENTIFIER LBRACE enumValueList RBRACE SEMICOLON
+    {
+        pin=1
+        recoverWhile=enumRecover
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMNamedElementImpl"
+        implements="com.digitalsubstrate.dsm.psi.DSMNamedElement"
+        methods=[getName setName getNameIdentifier getTextOffset]
+        stubClass="com.digitalsubstrate.dsm.stub.DSMNamedElementStub"
+        elementTypeFactory="com.digitalsubstrate.dsm.stub.DSMStubElementTypesKt.factory"
+    }
+
+private enumRecover ::= !(ENUM | STRUCT | CONCEPT | CLUB | MEMBERSHIP | ATTACHMENT | RBRACE)
+
+enumValueList ::= enumValueDecl (COMMA enumValueDecl)* COMMA?
+
+enumValueDecl ::=
+    identifierOrKeyword
+
+// Club & Membership
+clubDeclaration ::=
+    CLUB IDENTIFIER SEMICOLON
+    {
+        pin=1
+        recoverWhile=clubRecover
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMNamedElementImpl"
+        implements="com.digitalsubstrate.dsm.psi.DSMNamedElement"
+        methods=[getName setName getNameIdentifier getTextOffset]
+        stubClass="com.digitalsubstrate.dsm.stub.DSMNamedElementStub"
+        elementTypeFactory="com.digitalsubstrate.dsm.stub.DSMStubElementTypesKt.factory"
+    }
+
+private clubRecover ::= !(CLUB | MEMBERSHIP | STRUCT | CONCEPT | ENUM | ATTACHMENT | RBRACE)
+
+membershipDeclaration ::=
+    MEMBERSHIP IDENTIFIER IDENTIFIER SEMICOLON
+    {pin=1 recoverWhile=membershipRecover}
+
+private membershipRecover ::= !(MEMBERSHIP | STRUCT | CONCEPT | ENUM | CLUB | ATTACHMENT | RBRACE)
+
+// Attachment
+attachmentDeclaration ::=
+    ATTACHMENT LANGLE typeReference COMMA typeReference RANGLE IDENTIFIER SEMICOLON
+    {pin=1 recoverWhile=attachmentRecover}
+
+private attachmentRecover ::= !(ATTACHMENT | STRUCT | CONCEPT | ENUM | CLUB | MEMBERSHIP | RBRACE)
+
+// Function Pool
+functionPoolDeclaration ::=
+    FUNCTION_POOL IDENTIFIER UUID LBRACE functionDeclaration* RBRACE SEMICOLON
+    {
+        pin=1
+        recoverWhile=functionPoolRecover
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMNamedElementImpl"
+        implements="com.digitalsubstrate.dsm.psi.DSMNamedElement"
+        methods=[getName setName getNameIdentifier getTextOffset]
+    }
+
+private functionPoolRecover ::= !(NAMESPACE | FUNCTION_POOL | ATTACHMENT_FUNCTION_POOL | <<eof>>)
+
+attachmentFunctionPoolDeclaration ::=
+    ATTACHMENT_FUNCTION_POOL IDENTIFIER UUID LBRACE attachmentFunctionDeclaration* RBRACE SEMICOLON
+    {
+        pin=1
+        recoverWhile=attachmentFunctionPoolRecover
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMNamedElementImpl"
+        implements="com.digitalsubstrate.dsm.psi.DSMNamedElement"
+        methods=[getName setName getNameIdentifier getTextOffset]
+    }
+
+private attachmentFunctionPoolRecover ::= !(NAMESPACE | FUNCTION_POOL | ATTACHMENT_FUNCTION_POOL | <<eof>>)
+
+functionDeclaration ::=
+    typeReference IDENTIFIER LPAREN parameterList? RPAREN SEMICOLON
+    {pin=1 recoverWhile=functionRecover}
+
+private functionRecover ::= !(VOID | BOOL | INT8 | INT16 | INT32 | INT64 | UINT8 | UINT16 | UINT32 | UINT64 | FLOAT | DOUBLE | STRING | UUID_TYPE | BLOB_ID | COMMIT_ID | ANY | ANY_CONCEPT | KEY | OPTIONAL | VECTOR | SET | MAP | TUPLE | VARIANT | XARRAY | VEC | MAT | IDENTIFIER | RBRACE)
+
+attachmentFunctionDeclaration ::=
+    MUTABLE? typeReference IDENTIFIER LPAREN parameterList? RPAREN SEMICOLON
+    {pin=2 recoverWhile=attachmentFunctionRecover}
+
+private attachmentFunctionRecover ::= !(MUTABLE | VOID | BOOL | INT8 | INT16 | INT32 | INT64 | UINT8 | UINT16 | UINT32 | UINT64 | FLOAT | DOUBLE | STRING | UUID_TYPE | BLOB_ID | COMMIT_ID | ANY | ANY_CONCEPT | KEY | OPTIONAL | VECTOR | SET | MAP | TUPLE | VARIANT | XARRAY | VEC | MAT | IDENTIFIER | RBRACE)
+
+parameterList ::= parameter (COMMA parameter)*
+
+parameter ::= typeReference identifierOrKeyword
+    {pin=1}
+
+// Identifier or keyword (allows keywords as variable names)
+identifierOrKeyword ::=
+    IDENTIFIER
+    | VOID | BOOL
+    | INT8 | INT16 | INT32 | INT64
+    | UINT8 | UINT16 | UINT32 | UINT64
+    | FLOAT | DOUBLE
+    | STRING | UUID_TYPE | BLOB_ID | COMMIT_ID
+    | ANY | ANY_CONCEPT
+    | KEY | OPTIONAL | VECTOR | SET | MAP | TUPLE | VARIANT | XARRAY | VEC | MAT
+
+// Types
+typeReference ::=
+    primitiveType
+    | genericType
+    | userTypeReference
+
+primitiveType ::=
+    VOID | BOOL
+    | INT8 | INT16 | INT32 | INT64
+    | UINT8 | UINT16 | UINT32 | UINT64
+    | FLOAT | DOUBLE
+    | STRING | UUID_TYPE | BLOB_ID | COMMIT_ID
+    | ANY | ANY_CONCEPT
+
+genericType ::=
+    KEY LANGLE typeReference RANGLE
+    | OPTIONAL LANGLE typeReference RANGLE
+    | VECTOR LANGLE typeReference RANGLE
+    | SET LANGLE typeReference RANGLE
+    | MAP LANGLE typeReference COMMA typeReference RANGLE
+    | TUPLE LANGLE typeReferenceList RANGLE
+    | VARIANT LANGLE typeReferenceList RANGLE
+    | XARRAY LANGLE typeReference RANGLE
+    | VEC LANGLE typeReference COMMA NUMBER RANGLE
+    | MAT LANGLE typeReference COMMA NUMBER COMMA NUMBER RANGLE
+
+typeReferenceList ::= typeReference (COMMA typeReference)*
+
+userTypeReference ::= IDENTIFIER
+    {
+        mixin="com.digitalsubstrate.dsm.psi.impl.DSMUserTypeReferenceMixin"
+        methods=[getReference]
+    }
+
+// Literals
+literalValue ::=
+    booleanLiteral
+    | numberLiteral
+    | stringLiteralExpr
+    | uuidLiteral
+    | enumValueLiteralExpr
+    | listLiteral
+
+booleanLiteral ::= TRUE | FALSE
+
+numberLiteral ::= NUMBER
+
+stringLiteralExpr ::= STRING_LITERAL
+
+uuidLiteral ::= UUID
+
+enumValueLiteralExpr ::= ENUM_VALUE
+
+listLiteral ::= LBRACE literalValue (COMMA literalValue)* COMMA? RBRACE

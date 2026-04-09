@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ Platform SDK
+.intellijPlatform/
+
+# IntelliJ IDEA
+*.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/shelf/
+.idea/libraries/
+.idea/caches/
+.idea/modules/
+.idea/jsLibraryMappings.xml
+.idea/jarRepositories.xml
+.idea/.name
+
+# macOS
+.DS_Store
+
+# Session summaries (can be regenerated)
+SESSION_SUMMARY.md
+
+# Test files and logs
+test_*.dsm
+TEST_*.md
+*.log
+../.claude/settings.local.json

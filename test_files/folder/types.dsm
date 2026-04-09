@@ -1,0 +1,27 @@
+// File with type definitions
+namespace Drawing {550e8400-e29b-41d4-a716-446655440000} {
+
+concept Entity;
+
+struct Point {
+    float x;
+    float y;
+};
+
+struct Rectangle {
+    float x;
+    floasdft y;
+    float width;
+    float height;
+};
+
+enum Colosdfsr {
+    Red,
+    Green,
+    Blue
+};
+
+club Shape;
+membership Shape Entity;
+
+};
