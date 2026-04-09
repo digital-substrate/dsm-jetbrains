@@ -14,8 +14,8 @@ import java.io.IOException
  * Handles stub creation, serialization, and indexing.
  */
 abstract class DSMNamedStubElementType<Psi : DSMNamedElement>(
-    debugName: String
-) : IStubElementType<DSMNamedElementStub, Psi>(debugName, DSMLanguage.INSTANCE) {
+    private val name: String
+) : IStubElementType<DSMNamedElementStub, Psi>(name, DSMLanguage.INSTANCE) {
 
     override fun createStub(psi: Psi, parentStub: StubElement<*>?): DSMNamedElementStub {
         return DSMNamedElementStub(parentStub, this, psi.name)
@@ -28,11 +28,11 @@ abstract class DSMNamedStubElementType<Psi : DSMNamedElement>(
 
     @Throws(IOException::class)
     override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?): DSMNamedElementStub {
-        val name = dataStream.readNameString()
-        return DSMNamedElementStub(parentStub, this, StringRef.fromString(name))
+        val stubName = dataStream.readNameString()
+        return DSMNamedElementStub(parentStub, this, StringRef.fromString(stubName))
     }
 
-    override fun getExternalId(): String = "dsm.${debugName}"
+    override fun getExternalId(): String = "dsm.${name}"
 
     override fun indexStub(stub: DSMNamedElementStub, sink: IndexSink) {
         val name = stub.name

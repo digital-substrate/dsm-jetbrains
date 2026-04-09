@@ -65,13 +65,13 @@ class DSMValidationPanel(private val project: Project) : JPanel(BorderLayout()) 
                         else -> null
                     }
                 }
-                val event = com.intellij.openapi.actionSystem.AnActionEvent.createFromAnAction(
+                com.intellij.openapi.actionSystem.ex.ActionUtil.invokeAction(
                     it,
-                    null,
+                    dataContext,
                     com.intellij.openapi.actionSystem.ActionPlaces.UNKNOWN,
-                    dataContext
+                    null,
+                    null
                 )
-                it.actionPerformed(event)
             }
         }
         validateButton.toolTipText = "Run DSM validation (Ctrl+Alt+V)"

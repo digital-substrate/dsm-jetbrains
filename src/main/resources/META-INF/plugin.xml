@@ -263,7 +263,7 @@
 
         <!-- Live Templates -->
         <defaultLiveTemplates file="/liveTemplates/DSM.xml"/>
-        <liveTemplateContext contextId="DSM" implementation="com.digitalsubstrate.dsm.liveTemplates.DSMTemplateContextType"/>
+        <liveTemplateContext contextId="DSM" presentableName="DSM" implementation="com.digitalsubstrate.dsm.liveTemplates.DSMTemplateContextType"/>
 
         <!-- Symbol Search (Navigate | Symbol - Cmd+O / Ctrl+N) -->
         <gotoSymbolContributor implementation="com.digitalsubstrate.dsm.navigation.DSMChooseByNameContributor"/>

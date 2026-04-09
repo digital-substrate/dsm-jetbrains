@@ -57,7 +57,7 @@ class DSMSettingsConfigurable : Configurable {
             val descriptor = when {
                 isFolder -> FileChooserDescriptorFactory.createSingleFolderDescriptor()
                 fileExtension != null -> FileChooserDescriptorFactory.createSingleFileDescriptor(fileExtension)
-                else -> FileChooserDescriptorFactory.createSingleFileDescriptor()
+                else -> FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
             }
             descriptor.title = title
             descriptor.description = description

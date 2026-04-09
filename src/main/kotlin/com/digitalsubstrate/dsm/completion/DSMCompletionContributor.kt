@@ -6,7 +6,8 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
+import com.digitalsubstrate.dsm.core.DSMFileType
+import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
@@ -249,7 +250,7 @@ class DSMCompletionContributor : CompletionContributor() {
             val psiManager = PsiManager.getInstance(project)
             val scope = GlobalSearchScope.allScope(project)
 
-            FilenameIndex.getAllFilesByExt(project, "dsm", scope).forEach { virtualFile ->
+            FileTypeIndex.getFiles(DSMFileType.INSTANCE, scope).forEach { virtualFile ->
                 val psiFile = psiManager.findFile(virtualFile)
                 if (psiFile is DSMFile) {
                     // Find concepts

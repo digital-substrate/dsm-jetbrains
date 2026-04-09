@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.25"
+    id("org.jetbrains.kotlin.jvm") version "2.1.0"
     id("org.jetbrains.intellij.platform") version "2.3.0"
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
@@ -21,18 +21,26 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        intellijIdeaCommunity("2024.3")
+        intellijIdeaCommunity("2025.1")
         bundledPlugins("com.intellij.java")
     }
 }
 
 tasks {
     patchPluginXml {
-        sinceBuild.set("243")
+        sinceBuild.set("251")
     }
 
     publishPlugin {
         token.set(System.getenv("JETBRAINS_MARKETPLACE_TOKEN"))
+    }
+}
+
+intellijPlatform {
+    pluginVerification {
+        ides {
+            ide("IC", "2025.1")
+        }
     }
 }
 

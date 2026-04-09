@@ -5,6 +5,19 @@ All notable changes to the DSM Language Support plugin will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.7] - 2026-04-09
+
+### Changed
+- Target IntelliJ 2025.1+ (was 2024.3)
+- Kotlin 2.1.0 (was 1.9.25)
+- Replace deprecated `FilenameIndex.getAllFilesByExt` with `FileTypeIndex.getFiles`
+- Replace internal `IElementType.debugName` with private field
+- Replace `AnAction.actionPerformed()` (override-only) with `ActionUtil`
+- Published on [JetBrains Marketplace](https://plugins.jetbrains.com)
+
+### Known Issues
+- 2 deprecated constructors (`TemplateContextType`, `AnActionEvent`) — no replacement available yet, suppressed
+
 ## [1.2.3] - 2025-11-25
 
 ### Added

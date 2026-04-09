@@ -5,7 +5,8 @@ import com.digitalsubstrate.dsm.psi.DSMNamedElement
 import com.intellij.navigation.ChooseByNameContributorEx
 import com.intellij.navigation.NavigationItem
 import com.intellij.psi.PsiManager
-import com.intellij.psi.search.FilenameIndex
+import com.digitalsubstrate.dsm.core.DSMFileType
+import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.Processor
@@ -38,7 +39,7 @@ class DSMChooseByNameContributor : ChooseByNameContributorEx {
         val namesProcessed = mutableSetOf<String>()
 
         // Scan all .dsm files in the project
-        FilenameIndex.getAllFilesByExt(project, "dsm", scope).forEach { virtualFile ->
+        FileTypeIndex.getFiles(DSMFileType.INSTANCE, scope).forEach { virtualFile ->
             val psiFile = psiManager.findFile(virtualFile)
             if (psiFile is DSMFile) {
                 // Find all named elements in this file
@@ -70,7 +71,7 @@ class DSMChooseByNameContributor : ChooseByNameContributorEx {
         val psiManager = PsiManager.getInstance(project)
 
         // Scan all .dsm files to find elements with this name
-        FilenameIndex.getAllFilesByExt(project, "dsm", scope).forEach { virtualFile ->
+        FileTypeIndex.getFiles(DSMFileType.INSTANCE, scope).forEach { virtualFile ->
             val psiFile = psiManager.findFile(virtualFile)
             if (psiFile is DSMFile) {
                 // Find all named elements with matching name in this file

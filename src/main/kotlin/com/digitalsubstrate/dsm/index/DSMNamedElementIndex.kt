@@ -51,8 +51,10 @@ class DSMNamedElementIndex : StringStubIndexExtension<DSMNamedElement>() {
 
             // For now, we'll implement a simple file-based search
             // This will be slower but works without stubs
-            com.intellij.psi.search.FilenameIndex.getAllFilesByExt(project, "dsm")
-                .forEach { virtualFile ->
+            com.intellij.psi.search.FileTypeIndex.getFiles(
+                com.digitalsubstrate.dsm.core.DSMFileType.INSTANCE,
+                GlobalSearchScope.allScope(project)
+            ).forEach { virtualFile ->
                     val psiFile = psiManager.findFile(virtualFile)
                     if (psiFile is DSMFile) {
                         // Search for named elements in this file
