@@ -1,3 +1,4 @@
+// Copyright (c) Digital Substrate 2026, All rights reserved. MIT License.
 package com.digitalsubstrate.dsm.toolwindow
 
 import com.digitalsubstrate.dsm.services.DSMValidationService

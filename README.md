@@ -234,10 +234,10 @@ attachment_function_pool ModelGraph {9bdcbb5b-76e9-426f-b8a6-a10ed2d949e6} {
 
 ### Real-World Examples
 
-The Viper repository includes comprehensive DSM examples in `../dsm_samples/`:
+Comprehensive DSM examples are available in the [dsm-samples](https://github.com/digital-substrate/dsm-samples) repository:
 
-- **Graph modeling** (`dsm_samples/Ge/`): Graph topology, vertices, edges, attachment function pools
-- **3D rendering system** (`dsm_samples/Re/`): Materials, cameras, lighting, timelines, sensors
+- **Graph modeling** (`Ge/`): Graph topology, vertices, edges, attachment function pools
+- **3D rendering system** (`Re/`): Materials, cameras, lighting, timelines, sensors
 
 ## Keyboard Shortcuts
 
@@ -309,18 +309,20 @@ None at this time. Please report issues to: support@digitalsubstrate.io
 
 ## Development
 
-For developers working on the plugin itself, see [DEVELOPMENT.md](DEVELOPMENT.md) for build instructions, project structure, and contribution guidelines.
+For developers working on the plugin itself, see [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and code conventions.
 
 ## Support
 
 For questions, bug reports, or feature requests:
+- **Issues**: [GitHub Issues](https://github.com/digital-substrate/dsm-jetbrains/issues)
 - **Email**: support@digitalsubstrate.io
-- **Documentation**: See `../doc/DSM.md` and `../doc/Getting_Started.md` in the Viper repository
+- **Documentation**: DSM language documentation is distributed with the Viper DevKit
 
 ## Related Projects
 
-- **VS Code Extension**: `../dsm_vscode/` - DSM language support for Visual Studio Code
-- **DSM Utilities**: `../tools/dsm_util.py` - Command-line tools for DSM validation and code generation
+- **VS Code Extension**: [dsm-vscode](https://github.com/digital-substrate/dsm-vscode) — DSM language support for Visual Studio Code
+- **DSM Examples**: [dsm-samples](https://github.com/digital-substrate/dsm-samples) — Reference DSM models
+- **DSM Utilities**: `dsm_util.py` — Command-line tool for DSM validation (distributed with Viper DevKit)
 - **Viper Runtime**: Core C++ runtime for DSM-based applications
 
 ## License
@@ -331,4 +333,4 @@ Copyright 2026 Digital Substrate
 
 ---
 
-**Digital Substrate** | [Documentation](../doc/DSM.md) | [Getting Started](../doc/Getting_Started.md) | [PRP](PRP.md)
+**Digital Substrate** | [Report an issue](https://github.com/digital-substrate/dsm-jetbrains/issues) | [Contributing](CONTRIBUTING.md)
