@@ -68,11 +68,12 @@ class DSMValidationPanel(private val project: Project) : JPanel(BorderLayout()) 
 
         // Setup validate button — call the service directly (project is already in scope).
         validateButton.addActionListener {
-            // saveAllDocuments() requires the write-intent lock; a Swing action listener
-            // doesn't hold one, so wrap explicitly via the Runnable overload.
-            com.intellij.openapi.application.WriteIntentReadAction.run(Runnable {
+            // saveAllDocuments() requires write-intent access; a Swing action listener
+            // doesn't hold any lock, so wrap explicitly. WriteAction is the stable
+            // public API; WriteIntentReadAction is still @ApiStatus.Experimental in 2025.1.
+            com.intellij.openapi.application.WriteAction.run<RuntimeException> {
                 com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().saveAllDocuments()
-            })
+            }
             val target = resolveValidationTarget()
             if (target == null) {
                 DSMValidationToolWindowFactory.showError(project, "No selection, no open file, and project has no base path")
