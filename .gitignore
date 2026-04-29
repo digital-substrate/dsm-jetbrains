@@ -7,17 +7,14 @@ build/
 .intellijPlatform/
 
 # IntelliJ IDEA
+.idea/
 *.iml
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/dictionaries/
-.idea/shelf/
-.idea/libraries/
-.idea/caches/
-.idea/modules/
-.idea/jsLibraryMappings.xml
-.idea/jarRepositories.xml
-.idea/.name
+*.iws
+*.ipr
+out/
+
+# Kotlin compiler local cache
+.kotlin/
 
 # macOS
 .DS_Store
@@ -25,8 +22,11 @@ build/
 # Session summaries (can be regenerated)
 SESSION_SUMMARY.md
 
+# Local AI assistant context (not for public consumption)
+CLAUDE.md
+.claude/
+
 # Test files and logs
 test_*.dsm
 TEST_*.md
 *.log
-../.claude/settings.local.json
