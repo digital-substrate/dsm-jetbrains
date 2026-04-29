@@ -31,6 +31,18 @@ class DSMValidationPanel(private val project: Project) : JPanel(BorderLayout()) 
     private val prevButton = JButton("Previous Error", AllIcons.Actions.Back)
     private val nextButton = JButton("Next Error", AllIcons.Actions.Forward)
 
+    private val crashTextArea = javax.swing.JTextArea().apply {
+        isEditable = false
+        lineWrap = false
+        font = com.intellij.util.ui.JBFont.create(java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12))
+    }
+    private val centerLayout = java.awt.CardLayout()
+    private val centerPanel = JPanel(centerLayout)
+    companion object {
+        private const val CARD_TABLE = "table"
+        private const val CARD_CRASH = "crash"
+    }
+
     init {
         // Setup table
         table.autoCreateRowSorter = true
@@ -54,26 +66,19 @@ class DSMValidationPanel(private val project: Project) : JPanel(BorderLayout()) 
             }
         })
 
-        // Setup validate button
+        // Setup validate button — call the service directly (project is already in scope).
         validateButton.addActionListener {
-            // Trigger validation action
-            val action = com.intellij.openapi.actionSystem.ActionManager.getInstance()
-                .getAction("DSM.ValidateFiles")
-            action?.let {
-                val dataContext = com.intellij.openapi.actionSystem.DataContext { dataId ->
-                    when (dataId) {
-                        com.intellij.openapi.actionSystem.CommonDataKeys.PROJECT.name -> project
-                        else -> null
-                    }
-                }
-                com.intellij.openapi.actionSystem.ex.ActionUtil.invokeAction(
-                    it,
-                    dataContext,
-                    com.intellij.openapi.actionSystem.ActionPlaces.UNKNOWN,
-                    null,
-                    null
-                )
+            // saveAllDocuments() requires the write-intent lock; a Swing action listener
+            // doesn't hold one, so wrap explicitly via the Runnable overload.
+            com.intellij.openapi.application.WriteIntentReadAction.run(Runnable {
+                com.intellij.openapi.fileEditor.FileDocumentManager.getInstance().saveAllDocuments()
+            })
+            val target = resolveValidationTarget()
+            if (target == null) {
+                DSMValidationToolWindowFactory.showError(project, "No selection, no open file, and project has no base path")
+                return@addActionListener
             }
+            DSMValidationService.getInstance(project).validateDirectory(target, showToolWindow = true)
         }
         validateButton.toolTipText = "Run DSM validation (Ctrl+Alt+V)"
 
@@ -94,10 +99,40 @@ class DSMValidationPanel(private val project: Project) : JPanel(BorderLayout()) 
             add(Box.createHorizontalGlue())
         }
 
-        // Layout
+        // Layout — center is a CardLayout that swaps between the diagnostics table
+        // and a multi-line text area used to display crash output from dsm_util.py.
+        centerPanel.add(JBScrollPane(table), CARD_TABLE)
+        centerPanel.add(JBScrollPane(crashTextArea), CARD_CRASH)
+        centerLayout.show(centerPanel, CARD_TABLE)
+
         add(toolbar, BorderLayout.NORTH)
-        add(JBScrollPane(table), BorderLayout.CENTER)
+        add(centerPanel, BorderLayout.CENTER)
         add(statusLabel, BorderLayout.SOUTH)
+    }
+
+    /**
+     * Resolve the directory to validate. Always returns a directory — dsm_util.py
+     * needs the full set of sibling files to resolve cross-references. Priority:
+     *   1. Current selection in the Project view (folder, or file's parent folder)
+     *   2. Parent directory of the file currently open in the editor
+     *   3. project.basePath
+     */
+    private fun resolveValidationTarget(): String? {
+        // 1. Project view selection
+        val projectViewPane = com.intellij.ide.projectView.ProjectView.getInstance(project).currentProjectViewPane
+        val tree = projectViewPane?.tree
+        if (tree != null) {
+            val ctx = com.intellij.ide.DataManager.getInstance().getDataContext(tree)
+            val selected = ctx.getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE)
+            if (selected != null) {
+                return if (selected.isDirectory) selected.path else selected.parent?.path
+            }
+        }
+        // 2. Editor
+        com.intellij.openapi.fileEditor.FileEditorManager.getInstance(project)
+            .selectedFiles.firstOrNull()?.parent?.path?.let { return it }
+        // 3. Fallback
+        return project.basePath
     }
 
     /**
@@ -106,9 +141,24 @@ class DSMValidationPanel(private val project: Project) : JPanel(BorderLayout()) 
     fun updateResults(result: DSMValidationService.ValidationResult) {
         tableModel.setErrors(result.errors)
 
+        // Crash case: ERROR status with no parsable diagnostics — show raw output.
+        val isCrash = result.status == DSMValidationService.ValidationResult.Status.ERROR &&
+            result.errors.isEmpty() &&
+            !result.message.isNullOrBlank()
+        if (isCrash) {
+            crashTextArea.text = result.message
+            crashTextArea.caretPosition = 0
+            centerLayout.show(centerPanel, CARD_CRASH)
+        } else {
+            crashTextArea.text = ""
+            centerLayout.show(centerPanel, CARD_TABLE)
+        }
+
         statusLabel.text = when (result.status) {
             DSMValidationService.ValidationResult.Status.SUCCESS -> "✓ ${result.message}"
-            DSMValidationService.ValidationResult.Status.ERROR -> "✗ ${result.message}"
+            DSMValidationService.ValidationResult.Status.ERROR ->
+                if (isCrash) "✗ dsm_util.py crashed — see output above"
+                else "✗ ${result.message}"
             DSMValidationService.ValidationResult.Status.CANCELLED -> "⚠ ${result.message}"
         }
     }

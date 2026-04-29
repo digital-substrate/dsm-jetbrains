@@ -5,6 +5,19 @@ All notable changes to the DSM Language Support plugin will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.9] - 2026-04-29
+
+### Fixed
+- **Validate button (tool window)**: now actually triggers validation. The previous implementation went through the action system from a Swing listener and was silently disabled when `e.project` could not be resolved from the button's data context.
+- **Validation target**: Validate button used to always pass `project.basePath` to `dsm_util.py check`, which does not recurse into independent sub-projects. Now resolves to the directory of the current Project view selection, falling back to the open editor file's directory, then to `project.basePath`. Always sends a directory (sibling files are required to resolve cross-references).
+- **Crash reporting**: when `dsm_util.py` exits non-zero with no parsable diagnostics (e.g. Python `ModuleNotFoundError`), the tool window used to silently report `✓ No errors found`. It now switches to a multi-line text view showing the raw stderr/stdout, with a red badge and error count in the tab title.
+- **EDT threading**: `FileDocumentManager.saveAllDocuments()` is now wrapped in `WriteIntentReadAction.run`, fixing the `Access is allowed from write thread only` exception introduced by the 2025.1 threading model.
+
+### Changed
+- Removed the two deprecated API usages flagged by JetBrains Marketplace:
+  - `TemplateContextType(String, String)` → single-arg constructor (`contextId` already provided via `<liveTemplateContext>` in `plugin.xml`)
+  - `ActionUtil.invokeAction(action, dataContext, …)` removed in favor of a direct service call from the tool window panel
+
 ## [1.2.7] - 2026-04-09
 
 ### Changed

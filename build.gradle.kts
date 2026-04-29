@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.digitalsubstrate"
-version = "1.2.8"
+version = "1.2.9"
 
 kotlin {
     jvmToolchain(21)

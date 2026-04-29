@@ -133,13 +133,23 @@ class DSMValidationService(private val project: Project) {
                 return ValidationResult.cancelled()
             }
 
-            return if (exitCode == 0 && output.isEmpty()) {
+            if (exitCode == 0 && output.isEmpty()) {
                 log.info("DSM validation: No errors found")
-                ValidationResult.success()
-            } else {
-                log.info("DSM validation: Parsing output for errors")
-                ValidationResult.fromOutput(output, directory)
+                return ValidationResult.success()
             }
+            log.info("DSM validation: Parsing output for errors")
+            val parsed = ValidationResult.fromOutput(output, directory)
+            // If dsm_util.py crashed (non-zero exit) and produced no parsable diagnostics,
+            // surface the raw stderr/stdout instead of silently reporting success.
+            if (exitCode != 0 && parsed.errors.isEmpty()) {
+                val crashMessage = buildString {
+                    append("dsm_util.py exited with code ").append(exitCode)
+                    if (errorOutput.isNotBlank()) append("\n").append(errorOutput.trim())
+                    if (output.isNotBlank()) append("\n").append(output.trim())
+                }
+                return ValidationResult.error(crashMessage)
+            }
+            return parsed
 
         } catch (e: Exception) {
             log.error("Error running dsm_util.py validation", e)

@@ -33,10 +33,37 @@ class DSMValidationToolWindowFactory : ToolWindowFactory {
         fun showResults(project: Project, result: DSMValidationService.ValidationResult) {
             ApplicationManager.getApplication().invokeLater {
                 val toolWindow = ToolWindowManager.getInstance(project).getToolWindow("DSM Validation")
-                toolWindow?.show {
-                    val panel = project.getUserData(VALIDATION_PANEL_KEY)
-                    panel?.updateResults(result)
+                toolWindow ?: return@invokeLater
+                val panel = project.getUserData(VALIDATION_PANEL_KEY)
+                panel?.updateResults(result)
+                updateToolWindowBadge(toolWindow, result)
+                toolWindow.show()
+            }
+        }
+
+        private fun updateToolWindowBadge(
+            toolWindow: ToolWindow,
+            result: DSMValidationService.ValidationResult
+        ) {
+            val (icon, tabName) = when (result.status) {
+                DSMValidationService.ValidationResult.Status.SUCCESS ->
+                    com.intellij.icons.AllIcons.General.InspectionsOK to "DSM Validation"
+                DSMValidationService.ValidationResult.Status.ERROR -> {
+                    val count = result.errors.size
+                    if (count > 0) {
+                        com.intellij.icons.AllIcons.General.InspectionsError to "DSM Validation ($count)"
+                    } else {
+                        com.intellij.icons.AllIcons.General.BalloonError to "DSM Validation (!)"
+                    }
                 }
+                DSMValidationService.ValidationResult.Status.CANCELLED ->
+                    com.intellij.icons.AllIcons.General.InspectionsOK to "DSM Validation"
+            }
+            toolWindow.setIcon(icon)
+            toolWindow.contentManager.contents.firstOrNull()?.displayName = tabName
+            // Bring attention to the stripe button on errors.
+            if (result.status == DSMValidationService.ValidationResult.Status.ERROR) {
+                toolWindow.setAvailable(true)
             }
         }
 
