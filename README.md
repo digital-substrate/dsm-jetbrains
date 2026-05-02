@@ -327,9 +327,7 @@ For questions, bug reports, or feature requests:
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) for details.
-
-Copyright 2026 Digital Substrate
+This project is licensed under the MIT License — see [LICENSE](LICENSE).
 
 ---
 

@@ -47,4 +47,4 @@ Requires JDK 17+ and an active internet connection for the first build (dependen
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License (see [LICENSE](LICENSE)).
+This project is licensed under the MIT License (see [LICENSE](LICENSE)). By submitting a pull request, you agree that your contribution is provided under the same license (inbound = outbound). No CLA is required.
