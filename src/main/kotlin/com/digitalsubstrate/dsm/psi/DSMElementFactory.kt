@@ -1,4 +1,3 @@
-// Copyright (c) Digital Substrate 2026, All rights reserved. MIT License.
 package com.digitalsubstrate.dsm.psi
 
 import com.intellij.openapi.project.Project
