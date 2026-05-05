@@ -143,17 +143,13 @@ To configure DSM validation with `dsm_util.py`:
 
 ### Common Paths
 
-**macOS/Linux:**
-```
-dsm_util.py: /Volumes/DigitalSubstrate/com.digitalsubstrate.viper/tools/dsm_util.py
-Python:      /usr/bin/python3
-```
+`dsm_util.py` ships with the dsviper SDK. Locate it inside your local SDK
+checkout under `tools/dsm_util.py` and provide its absolute path in the
+plugin configuration.
 
-**Windows:**
-```
-dsm_util.py: C:\Projects\viper\tools\dsm_util.py
-Python:      C:\Python313\python.exe
-```
+**Python (typical defaults):**
+- macOS/Linux: `/usr/bin/python3`
+- Windows: `C:\Python313\python.exe`
 
 ## Usage Examples
 
