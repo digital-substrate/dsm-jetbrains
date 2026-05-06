@@ -4,6 +4,8 @@
 
 The DSM plugin provides comprehensive language support for `.dsm` files in all JetBrains IDEs, including syntax highlighting, intelligent code completion, advanced navigation, structure view, and validation via `dsm_util.py`.
 
+This plugin implements editor support for DSM. The language itself — surface grammar and the canonical JSON wire format used for tooling — is specified at [github.com/digital-substrate/dsm](https://github.com/digital-substrate/dsm).
+
 ## Features
 
 ### Syntax Highlighting
@@ -312,10 +314,12 @@ For developers working on the plugin itself, see [CONTRIBUTING.md](CONTRIBUTING.
 For questions, bug reports, or feature requests:
 - **Issues**: [GitHub Issues](https://github.com/digital-substrate/dsm-jetbrains/issues)
 - **Email**: support@digitalsubstrate.io
+- **Language Specification**: [github.com/digital-substrate/dsm](https://github.com/digital-substrate/dsm) — grammar (`DSM.g4`) and JSON wire format
 - **Documentation**: DSM language documentation is distributed with the Viper DevKit
 
 ## Related Projects
 
+- **DSM Language Specification**: [dsm](https://github.com/digital-substrate/dsm) — Grammar and JSON wire format, the language-level contract this plugin implements editor support for
 - **VS Code Extension**: [dsm-vscode](https://github.com/digital-substrate/dsm-vscode) — DSM language support for Visual Studio Code
 - **DSM Examples**: [dsm-samples](https://github.com/digital-substrate/dsm-samples) — Reference DSM models
 - **DSM Utilities**: `dsm_util.py` — Command-line tool for DSM validation (distributed with Viper DevKit)
