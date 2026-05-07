@@ -6,6 +6,12 @@ The DSM plugin provides comprehensive language support for `.dsm` files in all J
 
 This plugin implements editor support for DSM. The language itself — surface grammar and the canonical JSON wire format used for tooling — is specified at [github.com/digital-substrate/dsm](https://github.com/digital-substrate/dsm).
 
+## Documentation
+
+Full documentation: https://docs.digitalsubstrate.io/dsm/ide.html
+
+Part of the [DevKit ecosystem](https://docs.digitalsubstrate.io/).
+
 ## Features
 
 ### Syntax Highlighting
