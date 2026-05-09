@@ -140,7 +140,7 @@ To configure DSM validation with `dsm_util.py`:
 
 2. **Configure Paths**:
    - **Python Virtual Environment**: Path to your Python venv directory (e.g., `/Users/you/venv`)
-   - **dsm_util.py Path**: `/path/to/viper/tools/dsm_util.py`
+   - **dsm_util.py Path**: `/path/to/dsviper-tools/dsm_util.py`
    - **Validation Timeout**: `5000` ms (default, used by Ctrl+Alt+V validation)
 
 3. **Test Validation**:
@@ -151,9 +151,9 @@ To configure DSM validation with `dsm_util.py`:
 
 ### Common Paths
 
-`dsm_util.py` ships with the dsviper SDK. Locate it inside your local SDK
-checkout under `tools/dsm_util.py` and provide its absolute path in the
-plugin configuration.
+`dsm_util.py` lives in [dsviper-tools](https://github.com/digital-substrate/dsviper-tools)
+and is also bundled in the DevKit ZIP under `tools/dsm_util.py`. Provide
+its absolute path in the plugin configuration.
 
 **Python (typical defaults):**
 - macOS/Linux: `/usr/bin/python3`
@@ -305,7 +305,7 @@ Comprehensive DSM examples are available in the [dsm-samples](https://github.com
   - WebStorm, PhpStorm, RubyMine, GoLand, etc.
 - **Platform Build**: 243 or higher
 - **Python 3.x**: Required for external validation (optional feature)
-- **DSM Tools**: `dsm_util.py` from Viper project (for validation)
+- **DSM Tools**: `dsm_util.py` from [dsviper-tools](https://github.com/digital-substrate/dsviper-tools) (for semantic validation)
 
 ## Known Issues
 
@@ -328,8 +328,7 @@ For questions, bug reports, or feature requests:
 - **DSM Language Specification**: [dsm](https://github.com/digital-substrate/dsm) — Grammar and JSON wire format, the language-level contract this plugin implements editor support for
 - **VS Code Extension**: [dsm-vscode](https://github.com/digital-substrate/dsm-vscode) — DSM language support for Visual Studio Code
 - **DSM Examples**: [dsm-samples](https://github.com/digital-substrate/dsm-samples) — Reference DSM models
-- **DSM Utilities**: `dsm_util.py` — Command-line tool for DSM validation (distributed with Viper DevKit)
-- **Viper Runtime**: Core C++ runtime for DSM-based applications
+- **DSM Utilities**: [`dsm_util.py`](https://github.com/digital-substrate/dsviper-tools) — Command-line **semantic validator** for `.dsm` files. The plugin already validates syntax against the grammar.
 
 ## License
 
