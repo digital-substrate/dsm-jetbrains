@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No changes yet. Bug fixes for the next 1.2.x patch release will be listed here._
+### Changed
+- Verified compatible with IntelliJ Platform 2025.1 through 2026.3 (Plugin Verifier now runs against 2025.1, 2025.2 and unified IntelliJ IDEA 2025.3, 2026.1, 2026.2, 2026.3). Minimum supported version unchanged (`since-build` 251).
+- No more deprecated, experimental or internal API usages reported: Kotlin is compiled with JVM default methods (`jvmDefault = no-compatibility`), so the tool window factory no longer carries compiler-generated bridges to `ToolWindowFactory.isApplicable`, `isDoNotActivateOnStart`, `getIcon`, `getAnchor` and `manage`.
+- Build tooling: Gradle 9.8.2, IntelliJ Platform Gradle Plugin 2.20.0, Kotlin 2.3.21 (API/language level 2.1, matching the stdlib bundled with 2025.1), Grammar-Kit plugin 2023.3.0.4. Removed the unused `com.intellij.java` build dependency.
+- New `./gradlew runIdeLatest` task to run the sandbox on IntelliJ IDEA 2026.3.
 
 ## [1.2.9] - 2026-04-29
 
