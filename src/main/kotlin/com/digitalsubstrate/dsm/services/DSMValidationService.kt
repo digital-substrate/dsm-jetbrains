@@ -104,6 +104,8 @@ class DSMValidationService(private val project: Project) {
                 directory
             )
 
+            activateVenv(processBuilder, settings.pythonInterpreter)
+
             log.info("DSM validation command: ${processBuilder.command().joinToString(" ")}")
 
             val process = processBuilder.start()
@@ -154,6 +156,28 @@ class DSMValidationService(private val project: Project) {
             log.error("Error running dsm_util.py validation", e)
             return ValidationResult.error("Error running dsm_util.py: ${e.message}")
         }
+    }
+
+    /**
+     * Give the process the environment an activated venv would have
+     * (`bin/activate`): `VIRTUAL_ENV` set, the venv's script directory first on
+     * `PATH`, no `PYTHONHOME`. Without it, tools installed in the venv (e.g. a
+     * `cmake` used by an editable install's rebuild-on-import) are not found.
+     */
+    private fun activateVenv(processBuilder: ProcessBuilder, venvPath: String) {
+        if (venvPath.isEmpty()) return
+        val venvDir = File(venvPath)
+        val scriptsDir = listOf(File(venvDir, "bin"), File(venvDir, "Scripts"))
+            .firstOrNull { it.isDirectory } ?: return
+
+        val env = processBuilder.environment()
+        // On Windows the variable may be spelled "Path".
+        val pathKey = env.keys.firstOrNull { it.equals("PATH", ignoreCase = true) } ?: "PATH"
+        val currentPath = env[pathKey].orEmpty()
+        env[pathKey] = if (currentPath.isEmpty()) scriptsDir.absolutePath
+            else scriptsDir.absolutePath + File.pathSeparator + currentPath
+        env["VIRTUAL_ENV"] = venvDir.absolutePath
+        env.remove("PYTHONHOME")
     }
 
     /**

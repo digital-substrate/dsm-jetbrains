@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Validation with a configured venv**: `dsm_util.py` now runs with the environment of an activated venv (`VIRTUAL_ENV` set, the venv's `bin`/`Scripts` directory first on `PATH`, `PYTHONHOME` unset). Previously only the venv's interpreter was used, so tools installed in the venv were not found, e.g. `FileNotFoundError: 'cmake'` when `dsviper` is an editable install that rebuilds on import.
+
 ### Changed
 - Verified compatible with IntelliJ Platform 2025.1 through 2026.3 (Plugin Verifier now runs against 2025.1, 2025.2 and unified IntelliJ IDEA 2025.3, 2026.1, 2026.2, 2026.3). Minimum supported version unchanged (`since-build` 251).
 - No more deprecated, experimental or internal API usages reported: Kotlin is compiled with JVM default methods (`jvmDefault = no-compatibility`), so the tool window factory no longer carries compiler-generated bridges to `ToolWindowFactory.isApplicable`, `isDoNotActivateOnStart`, `getIcon`, `getAnchor` and `manage`.
